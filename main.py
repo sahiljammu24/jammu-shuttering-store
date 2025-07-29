@@ -2716,6 +2716,8 @@ else:
             if login_button:
                 if identifier == '123654':
                     st.success("1 Step away from admin login🤫🫠!")
+                    st.balloons()
+                    time.sleep(1)
                 elif not identifier:
                     st.error("Please enter your mobile number or customer ID.")
                 else:
@@ -2729,7 +2731,7 @@ else:
                                 st.session_state.user_data = customer_data
                                 st.success("Login successful!")
                                 st.balloons()
-                                time.sleep(0.5)
+                                time.sleep(1)
                                 st.rerun()
                             else:
                                 st.error("Failed to create session.")
