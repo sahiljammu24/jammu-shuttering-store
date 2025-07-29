@@ -915,34 +915,34 @@ if not st.session_state.initial_load_done:
 with st.sidebar:
     st.markdown("---")
 
-    if st.session_state.session_id:
+    
         
-        st.title("🔐 Login")
-        login_type = "Admin"
+    st.title("🔐 Login")
+    login_type = "Admin"
 
-       
-        if login_type == "Admin":
-            st.subheader("Admin Login")
-            with st.form("admin_login_form"):
-                admin_password_input = st.text_input("Password", type="password").strip()
-                admin_login_button = st.form_submit_button("🔑 Admin Login", use_container_width=True, type="primary")
+   
+    if login_type == "Admin":
+        st.subheader("Admin Login")
+        with st.form("admin_login_form"):
+            admin_password_input = st.text_input("Password", type="password").strip()
+            admin_login_button = st.form_submit_button("🔑 Admin Login", use_container_width=True, type="primary")
 
-            if admin_login_button:
-                if not admin_password_input:
-                    st.error("Please enter the admin password.")
-                elif hash_password(admin_password_input) == company["admin_password_hash"]:
-                    session_id = create_session("admin", "admin")
-                    if session_id:
-                        st.session_state.session_id = session_id
-                        st.session_state.user_type = "admin"
-                        st.session_state.user_data = {"username": "admin"}
-                        st.success("Admin login successful!")
-                        time.sleep(0.5)
-                        st.rerun()
-                    else:
-                        st.error("Failed to create admin session.")
+        if admin_login_button:
+            if not admin_password_input:
+                st.error("Please enter the admin password.")
+            elif hash_password(admin_password_input) == company["admin_password_hash"]:
+                session_id = create_session("admin", "admin")
+                if session_id:
+                    st.session_state.session_id = session_id
+                    st.session_state.user_type = "admin"
+                    st.session_state.user_data = {"username": "admin"}
+                    st.success("Admin login successful!")
+                    time.sleep(0.5)
+                    st.rerun()
                 else:
-                    st.error("Invalid admin password.")
+                    st.error("Failed to create admin session.")
+            else:
+                st.error("Invalid admin password.")
 
         st.markdown('</div>', unsafe_allow_html=True)
 
