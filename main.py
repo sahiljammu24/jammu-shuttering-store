@@ -5,7 +5,7 @@ import os
 import datetime as dt
 import locale
 from fpdf import FPDF
-from fpdf.enums import XPos, YPos
+# from fpdf.enums import XPos, YPos
 import qrcode
 import base64
 from PIL import Image
@@ -816,10 +816,11 @@ company = load_company_settings()
 
 st.set_page_config(
     page_title=f"{company['name']} - Portal",
-    page_icon="🏗️",
+    page_icon="🛠️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
+
 
 # Custom CSS for better styling
 st.markdown("""
@@ -917,37 +918,10 @@ with st.sidebar:
     if not st.session_state.session_id:
         
         st.title("🔐 Login")
-        login_type = st.radio("Login as:", ["Customer", "Admin"], index=0, horizontal=True)
+        login_type = "Admin"
 
-        if login_type == "Customer":
-            st.subheader("Customer Login")
-            with st.form("customer_login_form"):
-                identifier = st.text_input("Mobile Number or Customer ID",
-                                           placeholder="E.g., 9876543210 or CUST-001").strip()
-                login_button = st.form_submit_button("🚀 Login", use_container_width=True, type="primary")
-
-            if login_button:
-                if not identifier:
-                    st.error("Please enter your mobile number or customer ID.")
-                else:
-                    with st.spinner("Authenticating..."):
-                        customer_data = authenticate_customer(identifier)
-                        if customer_data:
-                            session_id = create_session(customer_data["customer_id"], "customer", customer_data)
-                            if session_id:
-                                st.session_state.session_id = session_id
-                                st.session_state.user_type = "customer"
-                                st.session_state.user_data = customer_data
-                                st.success("Login successful!")
-                                st.balloons()
-                                time.sleep(0.5)
-                                st.rerun()
-                            else:
-                                st.error("Failed to create session.")
-                        else:
-                            st.error("Invalid credentials. Please check your mobile number or customer ID.")
-
-        elif login_type == "Admin":
+       
+        if login_type == "Admin":
             st.subheader("Admin Login")
             with st.form("admin_login_form"):
                 admin_password_input = st.text_input("Password", type="password").strip()
@@ -993,7 +967,7 @@ with st.sidebar:
             st.markdown("**👨‍💼 Administrator**")
 
         st.markdown("---")
-        if st.button("🚪 Logout", use_container_width=True, type="secondary"):
+        if st.button("🚪 Logout", use_container_width=True, type="secondary",key=123):
             if st.session_state.session_id and delete_session(st.session_state.session_id):
                 st.session_state.session_id = None
                 st.session_state.user_type = None
@@ -1004,14 +978,7 @@ with st.sidebar:
             else:
                 st.error("Error logging out.")
 
-    # Quick company info in sidebar
-    st.markdown("---")
-    st.markdown("### 📞 Quick Contact")
-    st.markdown(f"📱 {company.get('mobile', 'N/A')}")
-    if company.get('email'):
-        st.markdown(f"📧 {company.get('email')}")
-    st.markdown(f"⏰ {company.get('business_hours', '9:00 AM - 6:00 PM')}")
-
+    
 # --- Main Content Area ---
 
 if st.session_state.user_type == "customer":
@@ -1028,6 +995,15 @@ if st.session_state.user_type == "customer":
     st.markdown(f"# 👋 Welcome, {customer.get('name', 'Customer')}")
     st.markdown(f"**Customer ID:** `{customer.get('customer_id', 'N/A')}`")
     st.markdown("---")
+    hide_st_style = """
+                    <style>
+                    MainMenu {visibility: hidden;}
+                    headerNoPadding {visibility: hidden;}
+                    _terminalButton_rix23_138 {visibility: hidden;}
+                    header {visibility: hidden;}
+                    </style>
+                    """
+    st.markdown(hide_st_style, unsafe_allow_html=True)
 
     tab1, tab2, tab3, tab4 = st.tabs(["📊 Dashboard", "📋 Rental History", "💳 Payments", "💰 Make Payment"])
 
@@ -1037,6 +1013,101 @@ if st.session_state.user_type == "customer":
             current_balance = calculate_customer_balance(customer)
             payment_received = sum(safe_float(p.get("amount", 0)) for p in customer.get("payment_history", []) if
                                    p.get("status") == "approved")
+            
+            if current_balance > 0:
+                # Enhanced balance display
+                col1, col2 = st.columns(2)
+                with col1:
+                    if current_balance > 0:
+                        st.error(f"💰 Outstanding Balance: {format_currency(current_balance)}")
+                        st.caption("⚠️ Payment required to clear dues")
+                    elif current_balance == 0:
+                        st.success("✅ No Outstanding Dues")
+                        st.caption("🎉 Your account is clear!")
+                    else:
+                        st.info(f"💰 Advance Balance: {format_currency(abs(current_balance))}")
+                        st.caption("💎 You have credit in your account")
+
+
+
+                st.markdown("---")
+
+                # Enhanced UPI Payment Section
+                st.subheader("📱 Quick UPI Payment")
+                
+                # Generate UPI payment link
+                upi_id = company.get('upi_id', '')
+                company_name = company.get('name', 'Jammu Shuttering Store')
+                amount = max(0.0, current_balance) if current_balance > 0 else None
+                tn = f"Payment for {customer.get('customer_id', '')}"
+                
+                upi_url = f"upi://pay?pa={upi_id}&pn={company_name.replace(' ', '%20')}"
+                if amount:
+                    upi_url += f"&am={amount:.2f}"
+                upi_url += "&cu=INR"
+                if tn:
+                    upi_url += f"&tn={tn.replace(' ', '%20')}"
+
+                col1, col2 = st.columns([3, 2])
+
+                with col1:
+                    st.markdown(f"""
+                    **🚀 Fast UPI Payment Steps:**
+                    1. Open any UPI app (Google Pay, PhonePe, Paytm, etc.)
+                    2. Scan the QR code or click the payment button below
+                    3. Verify amount: **{format_currency(amount) if amount else 'Enter Manually'}**
+                    4. Complete payment and note the transaction ID
+                    5. Submit payment details using the form above
+
+                    💡 **Pro Tip:** Screenshot the payment confirmation for reference
+                    """)
+
+                    if current_balance > 0:
+                        st.info(f"💰 **Recommended Payment:** {format_currency(current_balance)} (clears all dues)")
+                        
+                        # Add UPI payment button
+                        st.markdown(f"""
+                        <a href="{upi_url}" style="text-decoration: none;">
+                            <button style="
+                                background-color: #4CAF50;
+                                color: white;
+                                padding: 12px 24px;
+                                border: none;
+                                border-radius: 8px;
+                                font-size: 16px;
+                                cursor: pointer;
+                                width: 100%;
+                                margin-top: 10px;
+                            ">
+                                Pay Now via UPI
+                            </button>
+                        </a>
+                        """, unsafe_allow_html=True)
+
+                with col2:
+                    if company.get('upi_id'):
+                        try:
+                            qr_img_bytes = generate_qr_code(upi_id, amount, company_name)
+                            if qr_img_bytes and qr_img_bytes.getvalue():
+                                st.image(qr_img_bytes, width=200,
+                                        caption=f"Scan to pay via UPI")
+                                st.code(f"UPI ID: {upi_id}", language=None)
+                                
+                                # Display UPI payment details
+                                st.markdown("**Payment Details:**")
+                                st.markdown(f"""
+                                - **UPI ID:** `{upi_id}`
+                                - **Payee Name:** {company_name}
+                                - **Amount:** {format_currency(amount) if amount else 'Variable'}
+                                - **Note:** {tn}
+                                """)
+                            else:
+                                st.warning("⚠️ QR code generation failed")
+                        except Exception as e:
+                            st.error(f"Error displaying QR code: {str(e)}")
+                    else:
+                        st.info("🔧 UPI ID not configured. Contact admin.")
+
 
             col1, col2, col3 = st.columns(3)
             with col1:
@@ -1101,7 +1172,7 @@ if st.session_state.user_type == "customer":
         if not transactions:
             st.info("📋 No rental history found.")
         else:
-            # Enhanced transaction display with filters
+            # Enhanced transaction display with filters 
             col1, col2 = st.columns(2)
             with col1:
                 item_filter = st.selectbox(
@@ -1401,6 +1472,19 @@ if st.session_state.user_type == "customer":
 
                 💡 **Pro Tip:** Screenshot the payment confirmation for reference
                 """)
+                upi_id = company.get('upi_id', '')
+                company_name = company.get('name', 'Jammu Shuttering Store')
+                amount = max(0.0, current_balance) if current_balance > 0 else None
+                tn = f"Payment for {customer.get('customer_id', '')}"
+                
+                upi_url = f"upi://pay?pa={upi_id}&pn={company_name.replace(' ', '%20')}"
+                if amount:
+                    upi_url += f"&am={amount:.2f}"
+                upi_url += "&cu=INR"
+                if tn:
+                    upi_url += f"&tn={tn.replace(' ', '%20')}"
+                
+
 
                 if current_balance > 0:
                     st.info(f"💰 **Recommended Payment:** {format_currency(current_balance)} (clears all dues)")
@@ -1413,7 +1497,23 @@ if st.session_state.user_type == "customer":
                         if qr_img_bytes and qr_img_bytes.getvalue():
                             st.image(qr_img_bytes, width=200,
                                      caption=f"Scan to pay via UPI")
-                            st.code(f"UPI ID: {company.get('upi_id')}", language=None)
+                            st.markdown(f"""
+                        <a href="{upi_url}" style="text-decoration: none;">
+                            <button style="
+                                background-color: #4CAF50;
+                                color: white;
+                                padding: 12px 24px;
+                                border: none;
+                                border-radius: 8px;
+                                font-size: 16px;
+                                cursor: pointer;
+                                width: 100%;
+                                margin-top: 10px;
+                            ">
+                                Pay Now via UPI
+                            </button>
+                        </a>
+                        """, unsafe_allow_html=True)
                         else:
                             st.warning("⚠️ QR code generation failed")
                     except Exception as e:
@@ -1421,9 +1521,20 @@ if st.session_state.user_type == "customer":
                 else:
                     st.info("🔧 UPI ID not configured. Contact admin.")
 
+
         except Exception as e:
             st.error(f"Error in payment section: {str(e)}")
             logger.error(f"Payment tab error: {str(e)}")
+    if st.button("🚪 Logout", use_container_width=True, type="secondary"):
+            if st.session_state.session_id and delete_session(st.session_state.session_id):
+                st.session_state.session_id = None
+                st.session_state.user_type = None
+                st.session_state.user_data = None
+                st.success("Logged out successfully!")
+                time.sleep(0.5)
+                st.rerun()
+            else:
+                st.error("Error logging out.")
 
 elif st.session_state.user_type == "admin":
     st.title("🛠️ Admin Control Panel")
@@ -2533,7 +2644,7 @@ elif st.session_state.user_type == "admin":
                         st.session_state.confirm_clear_sessions = True
                         st.warning("Click again to confirm clearing all sessions.")
 
-        with system_tabs[3]:  # Support
+        with system_tabs[3]:  # Support 
             st.markdown("#### 🆘 Support Information")
 
             st.markdown(f"""
@@ -2558,6 +2669,16 @@ elif st.session_state.user_type == "admin":
             - Sessions can be safely cleared without data loss
             - Settings can be reset to defaults if needed
             """)
+    if st.button("🚪 Logout", use_container_width=True, type="secondary", key=4641):
+            if st.session_state.session_id and delete_session(st.session_state.session_id):
+                st.session_state.session_id = None
+                st.session_state.user_type = None
+                st.session_state.user_data = None
+                st.success("Logged out successfully!")
+                time.sleep(0.5)
+                st.rerun()
+            else:
+                st.error("Error logging out.")
 
 else:
     # Enhanced Landing Page
@@ -2568,15 +2689,54 @@ else:
     # Welcome message with login prompt
     col1, col2, col3 = st.columns([1, 2, 1])
     with col2:
-        st.markdown("""
-        <div style="text-align: center; padding: 2rem; background: #f8f9fa; border-radius: 10px; margin: 2rem 0;">
-            <h3 style="color: #2C3E50;">🔐 Access Your Account</h3>
-            <p style="color: #7F8C8D; font-size: 1.1em;">
-                Use the sidebar to log in as a customer or administrator to access your dashboard and manage your rental account.
-            </p>
-        </div>
-        """, unsafe_allow_html=True)
+        st.markdown("---")
 
+    if not st.session_state.session_id:
+        
+        st.title("🔐 Login")
+        login_type = 'Customer'
+
+        if login_type == "Customer":
+            st.subheader("Customer Login")
+            with st.form("customer_login_form"):
+                identifier = st.text_input("Mobile Number or Customer ID",
+                                           placeholder="E.g., 9876543210 or CUST-001").strip()
+                if identifier != '123654':
+                    hide_st_style = """
+                    <style>
+                    MainMenu {visibility: hidden;}
+                    headerNoPadding {visibility: hidden;}
+                    _terminalButton_rix23_138 {visibility: hidden;}
+                    header {visibility: hidden;}
+                    </style>
+                    """
+                    st.markdown(hide_st_style, unsafe_allow_html=True)
+                login_button = st.form_submit_button("🚀 Login", use_container_width=True, type="primary")
+
+            if login_button:
+                if identifier == '123654':
+                    st.success("1 Step away from admin login🤫🫠!")
+                elif not identifier:
+                    st.error("Please enter your mobile number or customer ID.")
+                else:
+                    with st.spinner("Authenticating..."):
+                        customer_data = authenticate_customer(identifier)
+                        if customer_data:
+                            session_id = create_session(customer_data["customer_id"], "customer", customer_data)
+                            if session_id:
+                                st.session_state.session_id = session_id
+                                st.session_state.user_type = "customer"
+                                st.session_state.user_data = customer_data
+                                st.success("Login successful!")
+                                st.balloons()
+                                time.sleep(0.5)
+                                st.rerun()
+                            else:
+                                st.error("Failed to create session.")
+                        else:
+                            st.error("Invalid credentials. Please check your mobile number or customer ID.")
+
+       
     # Display features
     display_features_section()
 
@@ -2670,7 +2830,7 @@ st.markdown("---")
 st.markdown(f"""
 <div style="text-align: center; padding: 1rem; color: #7F8C8D; font-size: 0.9em;">
     <p>© {dt.date.today().year} {company.get('name', 'Rental Management System')} | 
-    Powered by Streamlit | Version 2.0.0 Enhanced</p>
+    created by Sahil Jammu | Beta Version 1.0.0 </p>
     <p>🏗️ Professional Rental Management Solutions</p>
 </div>
 """, unsafe_allow_html=True)
