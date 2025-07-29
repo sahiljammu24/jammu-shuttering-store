@@ -915,7 +915,7 @@ if not st.session_state.initial_load_done:
 with st.sidebar:
     st.markdown("---")
 
-    if not st.session_state.session_id:
+    if st.session_state.session_id:
         
         st.title("🔐 Login")
         login_type = "Admin"
