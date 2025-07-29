@@ -5,7 +5,7 @@ import os
 import datetime as dt
 import locale
 from fpdf import FPDF
-# from fpdf.enums import XPos, YPos
+from fpdf.enums import XPos, YPos
 import qrcode
 import base64
 from PIL import Image
@@ -912,71 +912,6 @@ if not st.session_state.initial_load_done:
     st.session_state.initial_load_done = True
 
 # --- Enhanced Sidebar ---
-with st.sidebar:
-    st.markdown("---")
-
-    
-        
-    st.title("🔐 Login")
-    login_type = "Admin"
-
-   
-    if login_type == "Admin":
-        st.subheader("Admin Login")
-        with st.form("admin_login_form"):
-            admin_password_input = st.text_input("Password", type="password").strip()
-            admin_login_button = st.form_submit_button("🔑 Admin Login", use_container_width=True, type="primary")
-
-        if admin_login_button:
-            if not admin_password_input:
-                st.error("Please enter the admin password.")
-            elif hash_password(admin_password_input) == company["admin_password_hash"]:
-                session_id = create_session("admin", "admin")
-                if session_id:
-                    st.session_state.session_id = session_id
-                    st.session_state.user_type = "admin"
-                    st.session_state.user_data = {"username": "admin"}
-                    st.success("Admin login successful!")
-                    time.sleep(0.5)
-                    st.rerun()
-                else:
-                    st.error("Failed to create admin session.")
-            else:
-                st.error("Invalid admin password.")
-
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    else:
-        st.title("👋 Welcome!")
-        if st.session_state.user_type == "customer":
-            st.markdown(f"**👤 {st.session_state.user_data.get('name', 'Customer')}**")
-            st.caption(f"ID: `{st.session_state.user_data.get('customer_id', 'N/A')}`")
-
-            # Quick balance display
-            try:
-                balance = calculate_customer_balance(st.session_state.user_data)
-                if balance > 0:
-                    st.error(f"💰 Due: {format_currency(balance)}")
-                elif balance < 0:
-                    st.success(f"💰 Advance: {format_currency(abs(balance))}")
-                else:
-                    st.info("💰 Balance: Clear")
-            except:
-                pass
-        else:
-            st.markdown("**👨‍💼 Administrator**")
-
-        st.markdown("---")
-        if st.button("🚪 Logout", use_container_width=True, type="secondary",key=123):
-            if st.session_state.session_id and delete_session(st.session_state.session_id):
-                st.session_state.session_id = None
-                st.session_state.user_type = None
-                st.session_state.user_data = None
-                st.success("Logged out successfully!")
-                time.sleep(0.5)
-                st.rerun()
-            else:
-                st.error("Error logging out.")
 
     
 # --- Main Content Area ---
@@ -2716,8 +2651,6 @@ else:
             if login_button:
                 if identifier == '123654':
                     st.success("1 Step away from admin login🤫🫠!")
-                    st.balloons()
-                    time.sleep(1)
                 elif not identifier:
                     st.error("Please enter your mobile number or customer ID.")
                 else:
@@ -2731,7 +2664,7 @@ else:
                                 st.session_state.user_data = customer_data
                                 st.success("Login successful!")
                                 st.balloons()
-                                time.sleep(1)
+                                time.sleep(0.5)
                                 st.rerun()
                             else:
                                 st.error("Failed to create session.")
@@ -2826,6 +2759,71 @@ else:
             <p>or use the sidebar to access your existing account</p>
         </div>
         """.format(company.get('mobile', 'Contact Admin')), unsafe_allow_html=True)
+with st.sidebar:
+    st.markdown("---")
+
+    if not st.session_state.session_id:
+        
+        st.title("🔐 Login")
+        login_type = "Admin"
+
+       
+        if login_type == "Admin":
+            st.subheader("Admin Login")
+            with st.form("admin_login_form"):
+                admin_password_input = st.text_input("Password", type="password").strip()
+                admin_login_button = st.form_submit_button("🔑 Admin Login", use_container_width=True, type="primary")
+
+            if admin_login_button:
+                if not admin_password_input:
+                    st.error("Please enter the admin password.")
+                elif hash_password(admin_password_input) == company["admin_password_hash"]:
+                    session_id = create_session("admin", "admin")
+                    if session_id:
+                        st.session_state.session_id = session_id
+                        st.session_state.user_type = "admin"
+                        st.session_state.user_data = {"username": "admin"}
+                        st.success("Admin login successful!")
+                        time.sleep(0.5)
+                        st.rerun()
+                    else:
+                        st.error("Failed to create admin session.")
+                else:
+                    st.error("Invalid admin password.")
+
+        st.markdown('</div>', unsafe_allow_html=True)
+
+    else:
+        st.title("👋 Welcome!")
+        if st.session_state.user_type == "customer":
+            st.markdown(f"**👤 {st.session_state.user_data.get('name', 'Customer')}**")
+            st.caption(f"ID: `{st.session_state.user_data.get('customer_id', 'N/A')}`")
+
+            # Quick balance display
+            try:
+                balance = calculate_customer_balance(st.session_state.user_data)
+                if balance > 0:
+                    st.error(f"💰 Due: {format_currency(balance)}")
+                elif balance < 0:
+                    st.success(f"💰 Advance: {format_currency(abs(balance))}")
+                else:
+                    st.info("💰 Balance: Clear")
+            except:
+                pass
+        else:
+            st.markdown("**👨‍💼 Administrator**")
+
+        st.markdown("---")
+        if st.button("🚪 Logout", use_container_width=True, type="secondary",key=123):
+            if st.session_state.session_id and delete_session(st.session_state.session_id):
+                st.session_state.session_id = None
+                st.session_state.user_type = None
+                st.session_state.user_data = None
+                st.success("Logged out successfully!")
+                time.sleep(0.5)
+                st.rerun()
+            else:
+                st.error("Error logging out.")
 
 # Footer
 st.markdown("---")
