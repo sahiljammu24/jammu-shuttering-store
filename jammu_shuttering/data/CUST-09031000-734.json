@@ -1,0 +1,32 @@
+{
+    "customer_id": "CUST-09031000-734",
+    "name": "Bhajan",
+    "mobile": "____________________",
+    "address": "Taharpur ",
+    "previous_balance": 0.0,
+    "payment_received": 100.0,
+    "payment_history": [
+        {
+            "id": "71ad2b00",
+            "date": "2025-09-03",
+            "amount": 100.0,
+            "method": "Cash",
+            "reference": "",
+            "notes": ""
+        }
+    ],
+    "items": [
+        [
+            "fata",
+            10.0
+        ]
+    ],
+    "transactions": [
+        {
+            "date": "2025-09-03",
+            "item": "fata",
+            "qty": 2,
+            "rent": 10.0
+        }
+    ]
+}

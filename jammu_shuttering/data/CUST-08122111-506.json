@@ -1,0 +1,68 @@
+{
+    "customer_id": "CUST-08122111-506",
+    "name": "Kaval",
+    "mobile": "9815708057",
+    "address": "Shahkot",
+    "previous_balance": 0.0,
+    "payment_received": 7000.0,
+    "payment_history": [
+        {
+            "id": "dc8b6a8e",
+            "date": "2025-07-21",
+            "amount": 4000.0,
+            "method": "Cash",
+            "reference": "",
+            "notes": ""
+        },
+        {
+            "id": "e9e12eb7",
+            "date": "2025-08-12",
+            "amount": 3000.0,
+            "method": "Cash",
+            "reference": "",
+            "notes": ""
+        }
+    ],
+    "items": [
+        [
+            "Plate (4'x2')",
+            2.0
+        ],
+        [
+            "Plate (3'x2')",
+            2.0
+        ]
+    ],
+    "transactions": [
+        {
+            "date": "2025-06-01",
+            "item": "Plate (4'x2')",
+            "qty": 70,
+            "rent": 2.0
+        },
+        {
+            "date": "2025-07-06",
+            "item": "Plate (4'x2')",
+            "qty": 20,
+            "rent": 2.0
+        },
+        {
+            "date": "2025-07-24",
+            "item": "Plate (3'x2')",
+            "qty": 25,
+            "rent": 2.0
+        },
+        {
+            "date": "2025-08-25",
+            "item": "Plate (3'x2')",
+            "qty": 0,
+            "rent": 2.0
+        },
+        {
+            "date": "2025-08-25",
+            "item": "Plate (4'x2')",
+            "qty": 0,
+            "rent": 2.0
+        }
+    ]
+}

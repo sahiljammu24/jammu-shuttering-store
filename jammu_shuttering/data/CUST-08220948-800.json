@@ -1,0 +1,50 @@
+{
+    "customer_id": "CUST-08220948-800",
+    "name": "Sinda",
+    "mobile": "9815069242",
+    "address": "Shahkot",
+    "previous_balance": 42548.0,
+    "payment_received": 5500.0,
+    "payment_history": [
+        {
+            "id": "133538a0",
+            "date": "2025-07-11",
+            "amount": 500.0,
+            "method": "Cash",
+            "reference": "",
+            "notes": ""
+        },
+        {
+            "id": "f743b424",
+            "date": "2025-08-11",
+            "amount": 5000.0,
+            "method": "Cash",
+            "reference": "",
+            "notes": ""
+        }
+    ],
+    "items": [
+        [
+            "Ballia (12ft)",
+            1.75
+        ],
+        [
+            "Ballia (14ft)",
+            2.0
+        ]
+    ],
+    "transactions": [
+        {
+            "date": "2025-08-22",
+            "item": "Ballia (12ft)",
+            "qty": 70,
+            "rent": 1.75
+        },
+        {
+            "date": "2025-08-27",
+            "item": "Ballia (14ft)",
+            "qty": 30,
+            "rent": 2.0
+        }
+    ]
+}

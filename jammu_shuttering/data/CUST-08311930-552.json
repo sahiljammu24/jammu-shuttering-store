@@ -1,0 +1,169 @@
+{
+    "customer_id": "CUST-08311930-552",
+    "name": "Manakpur (Gurudwara)",
+    "mobile": "_____________________________",
+    "address": "Manakpur",
+    "previous_balance": 0.0,
+    "payment_received": 0.0,
+    "payment_history": [],
+    "items": [
+        [
+            "Plate (2'x4')",
+            4.0
+        ],
+        [
+            "Plate (15\"x4')",
+            4.0
+        ],
+        [
+            "Plate (18\"x4')",
+            4.0
+        ],
+        [
+            "Plate (1'x4')",
+            4.0
+        ],
+        [
+            "Channel (16ft)",
+            3.0
+        ],
+        [
+            "Channel (15ft)",
+            3.0
+        ],
+        [
+            "Channel (13ft)",
+            3.0
+        ],
+        [
+            "Channel (14ft)",
+            3.0
+        ],
+        [
+            "Channel (12ft)",
+            3.0
+        ],
+        [
+            "Channel (11ft)",
+            3.0
+        ],
+        [
+            "Channel (10ft)",
+            3.0
+        ],
+        [
+            "Channel (9ft)",
+            3.0
+        ],
+        [
+            "Channel (8ft)",
+            3.0
+        ],
+        [
+            "Channel (6ft)",
+            3.0
+        ],
+        [
+            "Channel (4ft)",
+            3.0
+        ]
+    ],
+    "transactions": [
+        {
+            "date": "2025-08-31",
+            "item": "Plate (2'x4')",
+            "qty": 420,
+            "rent": 4.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Plate (15\"x4')",
+            "qty": 73,
+            "rent": 4.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Plate (18\"x4')",
+            "qty": 26,
+            "rent": 4.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Plate (1'x4')",
+            "qty": 180,
+            "rent": 4.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (16ft)",
+            "qty": 20,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (15ft)",
+            "qty": 10,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (13ft)",
+            "qty": 7,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (14ft)",
+            "qty": 20,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (12ft)",
+            "qty": 20,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (11ft)",
+            "qty": 10,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (10ft)",
+            "qty": 20,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (9ft)",
+            "qty": 3,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (8ft)",
+            "qty": 10,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (6ft)",
+            "qty": 10,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-08-31",
+            "item": "Channel (4ft)",
+            "qty": 10,
+            "rent": 3.0
+        },
+        {
+            "date": "2025-09-04",
+            "item": "Plate (2'x4')",
+            "qty": 0,
+            "rent": 4.0
+        }
+    ]
+}

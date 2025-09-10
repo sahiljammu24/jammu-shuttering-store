@@ -1,0 +1,23 @@
+{
+    "customer_id": "CUST-09041815-482",
+    "name": "Sirmal",
+    "mobile": "8264508965",
+    "address": "Shahkot",
+    "previous_balance": 0.0,
+    "payment_received": 0.0,
+    "payment_history": [],
+    "items": [
+        [
+            "Plate (18\"x4')",
+            2.5
+        ]
+    ],
+    "transactions": [
+        {
+            "date": "2025-09-04",
+            "item": "Plate (18\"x4')",
+            "qty": 97,
+            "rent": 2.5
+        }
+    ]
+}
